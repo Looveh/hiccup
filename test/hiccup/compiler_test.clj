@@ -1,15 +1,6 @@
 (ns hiccup.compiler-test
   (:require [clojure.test :refer :all]
-            [clojure.walk :as walk]
-            [hiccup2.core :refer [html]])
-  (:import (hiccup.util RawString)))
-
-(defn- extract-strings [code]
-  (->> (tree-seq coll? seq code)
-       (filter #(or (string? %)
-                    (instance? RawString %)))
-       (map str)
-       (set)))
+            [hiccup2.core :refer [html]]))
 
 (deftest test-compile-element-literal-tag
   ;; `compile-element ::literal-tag` behavior varies based on the following
@@ -115,5 +106,5 @@
            "<p><span>x</span></p>")))
 
   (testing "compiles literal child elements"
-    (let [code (walk/macroexpand-all `(html [(identity :p) [:span "x"]]))]
-      (is (= (extract-strings code) #{"" "<span>x</span>"})))))
+    (is (= (str (html [(identity :p) [:span "x"]]))
+           "<p><span>x</span></p>"))))

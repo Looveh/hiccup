@@ -294,6 +294,8 @@
   "Returns the compilation strategy to use for a given element."
   [[tag attrs & content :as element]]
   (cond
+    (seq? tag)                         ; e.g. [(identity :span) "foo"]
+      ::form-tag
     (every? literal? element)
       ::all-literal                    ; e.g. [:span "foo"]
     (and (literal? tag) (map? attrs))
@@ -312,6 +314,10 @@
   element."
   {:private true}
   element-compile-strategy)
+
+(defmethod compile-element ::form-tag
+  [[tag & content]]
+  `(render-element [~(compile-form tag) ~@content]))
 
 (defmethod compile-element ::all-literal
   [element]

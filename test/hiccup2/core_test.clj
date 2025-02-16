@@ -139,7 +139,17 @@
     (let [times-called (atom 0)
           foo #(swap! times-called inc)]
       (html [:div (foo)])
-      (is (= @times-called 1)))))
+      (is (= @times-called 1))))
+  (testing "nested tags can be forms"
+    (is (= (str (html [(identity :div) "foo"]))
+           "<div>foo</div>"))
+    (is (= (str (html [(identity :div) [(identity :div) "foo"]]))
+           "<div><div>foo</div></div>"))
+    (is (= (str (html [(identity :div) [(identity :div) [(identity :div) "foo"]]]))
+           "<div><div><div>foo</div></div></div>"))
+    (is (= (str (let [tag (identity :div)]
+                  (html [tag "foo"])))
+           "<div>foo</div>"))))
 
 (deftest render-modes
   (testing "closed tag"
