@@ -302,6 +302,8 @@
       ::literal-tag-and-no-attributes  ; e.g. [:span ^String x]
     (literal? tag)
       ::literal-tag                    ; e.g. [:span x]
+    (symbol? tag)
+      ::symbol-tag                     ; e.g. [my-var x]
     (seq? tag)
       ::form-tag                       ; e.g. [(identity :span) "foo"]
     :else
@@ -362,6 +364,10 @@
            (str "</" tag ">")
            `(when ~content?-sym
               ~(str "</" tag ">")))))))
+
+(defmethod compile-element ::symbol-tag
+  [[tag & content]]
+  `(render-element [~tag ~@content]))
 
 (defmethod compile-element ::form-tag
   [[tag & content]]

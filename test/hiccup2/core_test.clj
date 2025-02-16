@@ -146,10 +146,17 @@
     (is (= (str (html [(identity :div) [(identity :div) "foo"]]))
            "<div><div>foo</div></div>"))
     (is (= (str (html [(identity :div) [(identity :div) [(identity :div) "foo"]]]))
-           "<div><div><div>foo</div></div></div>"))
-    (is (= (str (let [tag (identity :div)]
+           "<div><div><div>foo</div></div></div>")))
+  (testing "nested tags can be symbols"
+    (is (= (str (let [tag :div]
                   (html [tag "foo"])))
-           "<div>foo</div>"))))
+           "<div>foo</div>"))
+    (is (= (str (let [tag :div]
+                  (html [tag [tag "foo"]])))
+           "<div><div>foo</div></div>"))
+    (is (= (str (let [tag :div]
+                  (html [tag [tag [tag "foo"]]])))
+           "<div><div><div>foo</div></div></div>"))))
 
 (deftest render-modes
   (testing "closed tag"
