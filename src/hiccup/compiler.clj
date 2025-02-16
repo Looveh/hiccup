@@ -303,7 +303,7 @@
     (literal? tag)
       ::literal-tag                    ; e.g. [:span x]
     (symbol? tag)
-      ::symbol-tag                     ; e.g. [my-var x]
+      ::symbol-tag                     ; e.g. [x "foo"], where (def x :span)
     (seq? tag)
       ::form-tag                       ; e.g. [(identity :span) "foo"]
     :else
